@@ -11,9 +11,9 @@ const main = {
     background:'yellow',
 }
 
-const counter = {
-    paddingLeft:'20px',
-    paddingRight:'20px',
+const dateBox = {
+    padding:'8px',
+    borderBottom:'1px dotted black',
 }
 
 const table = {
@@ -117,6 +117,23 @@ const Home = () => {
     const userName = "Harsh";
     const [counterValue, setCounterValue] = useState(data[Object.keys(data)[Object.keys(data).length-1]]);
     
+
+
+    // 
+
+    const startDate = new Date('11/17/2023');
+    const presentDate = new Date();
+    const datesArray = [];
+    const currentDate = new Date(startDate);
+    console.log(startDate, presentDate, currentDate);
+    while (currentDate <= presentDate) {
+        const formattedDate = currentDate.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        datesArray.push(formattedDate); // Adjust the locale and format as needed
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    //   
+    
     return (
         <Box>
 
@@ -130,11 +147,12 @@ const Home = () => {
             </Box>
             <Box style={main}>
                 <Box style={table}>
-                    {Object.keys(data).map((item, i) => (
-                        <Box>
-                            {item} : {data[item]}
-                        </Box>
-                    ))}
+                    {
+                        datesArray.map((date,i) => {
+                            return <Box style={dateBox}> {date} : {data[date] === undefined ? 0 : data[date]} </Box>
+                        })
+                    }
+
                 </Box>
             </Box>
         </Box>
