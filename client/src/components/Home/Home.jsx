@@ -19,6 +19,7 @@ const counter = {
 const table = {
     paddingLeft:'20px',
     paddingRight:'20px',
+    width:'98vw',
     height:'98vh',
     background:'rgba(744, 740, 740, 0.4)',
     zIndex:1,
