@@ -20,21 +20,30 @@ const table = {
     paddingLeft:'20px',
     paddingRight:'20px',
     width:'98vw',
-    height:'98vh',
+    height:'89vh',
     background:'rgba(744, 740, 740, 0.4)',
     zIndex:1,
 }
 
+const totalStyle = {
+    paddingLeft:'40px',
+    paddingRight:'20px',
+    paddingTop:'20px',
+    width:'98vw',
+    background:'rgba(744, 740, 740, 0.4)',
+};
+
 const Home = () => {
 
     const [data, setData] = useState([]);
-    const [show, setShow] = useState(false);
+    const [total, setTotal] = useState(0);
+    const [datesArray, setDatesArray] = useState([]);
+
     React.useEffect(() => {
 
         const fetchData = async (e) => {
         
             var api = "";
-
             if(process.env.NODE_ENV === 'development') api = 'http://localhost:8000/getUserData';
             else api = '/getUserData';
             
@@ -49,22 +58,28 @@ const Home = () => {
             });
     
             const resp = await res.json();
-            setData(resp.data.count.dayCount);
-            console.log(resp.data.count.dayCount);
-            setShow(true);
+            const resData = resp.data.count.dayCount;
+            setData(resData);
+            setTotal(0);
             setCounterValue(resp.data.count.dayCount[Object.keys(resp.data.count.dayCount)[Object.keys(resp.data.count.dayCount).length-1]]);
             
-            if(resp.status === 200) {
-                //alert(resp.message);
-                // setseverityMsg("success")
-                // setsnackBarMsg(resp.message);
-                // setOpen(true);
-                // setData({...data,name:'',url:''});
+            if(resp.resCode === 200) {
+                const startDate = new Date('11/17/2023');
+                const presentDate = new Date();
+                const currentDate = new Date(startDate);
+                let totalFrequency = 0;
+                const dataArray = [];
+                while (currentDate <= presentDate) {
+                    const formattedDate = currentDate.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                    const frequencyMeasure = resData[formattedDate] === undefined ? 0 : resData[formattedDate];
+                    dataArray.push({date:formattedDate, frequency:frequencyMeasure}); // Adjust the locale and format as needed
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    totalFrequency+=frequencyMeasure;
+                }
+                setTotal(totalFrequency);
+                setDatesArray(dataArray);
             }
             else {
-                // setseverityMsg("error")
-                // setsnackBarMsg(resp.message);
-                // setOpen(true);
             }
         }
 
@@ -73,15 +88,14 @@ const Home = () => {
       }, []);
 
 
+      
     const countAdjuster = async (e) => {
         
         let newValue = counterValue+e;
-        setCounterValue(newValue);
 
         var api = "";
         var currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        console.log(formattedDate);
         data[formattedDate] = newValue;
 
         if(process.env.NODE_ENV === 'development') api = 'http://localhost:8000/countAdjuster';
@@ -98,13 +112,14 @@ const Home = () => {
         });
 
         const resp = await res.json();
-        
-        if(resp.status === 200) {
-            //alert(resp.message);
-            // setseverityMsg("success")
-            // setsnackBarMsg(resp.message);
-            // setOpen(true);
-            // setData({...data,name:'',url:''});
+        console.log(resp);
+        if(resp.resCode === '200') {
+            console.log(datesArray[formattedDate], formattedDate, newValue);
+            datesArray[datesArray.length-1].frequency = newValue;
+            console.log(datesArray[datesArray.length-1].frequency, newValue);
+            setDatesArray(datesArray);
+            setCounterValue(newValue);
+            setTotal(total+e);
         }
         else {
             // setseverityMsg("error")
@@ -113,26 +128,9 @@ const Home = () => {
         }
     }
 
-    console.log(data, Object.keys(data).length, data[Object.keys(data)[Object.keys(data).length-1]]);
     const userName = "Harsh";
     const [counterValue, setCounterValue] = useState(data[Object.keys(data)[Object.keys(data).length-1]]);
-    
-
-
-    // 
-
-    const startDate = new Date('11/17/2023');
-    const presentDate = new Date();
-    const datesArray = [];
-    const currentDate = new Date(startDate);
-    console.log(startDate, presentDate, currentDate);
-    while (currentDate <= presentDate) {
-        const formattedDate = currentDate.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        datesArray.push(formattedDate); // Adjust the locale and format as needed
-        currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    //   
+      
     
     return (
         <Box>
@@ -147,13 +145,15 @@ const Home = () => {
             </Box>
             <Box style={main}>
                 <Box style={table}>
+                    
                     {
-                        datesArray.map((date,i) => {
-                            return <Box style={dateBox}> {date} : {data[date] === undefined ? 0 : data[date]} </Box>
+                        datesArray.map((d,i) => {
+                            return <Box style={dateBox} key={i}> {d.date} : {d.frequency} </Box>
                         })
                     }
 
                 </Box>
+                <Box style={totalStyle}> Total : {total}</Box>
             </Box>
         </Box>
     )

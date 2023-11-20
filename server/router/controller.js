@@ -24,23 +24,23 @@ router.post('/countAdjuster', async (req,res) => {
             fetchedUser.save()
             .then(msg => {
                 console.log(msg);
-            return res.status(200).json({err:'200',message:"Authorised SignIn"});
+            return res.status(200).json({resCode:'200',message:"Authorised SignIn"});
             })
             .catch(err => {
-            return res.status(200).json({err:'400',message:err});
+            return res.status(200).json({resCode:'400',message:err});
             });
         } else {
             NewUser.save()
             .then(item => {
-            return res.status(200).json({message:"SignUp Successfully",status:200});
+            return res.status(200).json({message:"SignUp Successfully",resCode:200});
             })
             .catch(err => {
-            return res.status(200).json({message:"SignUp Failed, If problem continues contanct sakshatkar",status:400});
+            return res.status(200).json({message:"SignUp Failed, If problem continues contanct sakshatkar",resCode:400});
             });
         }
     })
     .catch(err => {
-        return res.status(200).json({message:"SignUp Failed, Try again or If problem continues contact sakshatkar",status:400});
+        return res.status(200).json({message:"SignUp Failed, Try again or If problem continues contact sakshatkar",resCode:400});
     });
 
 });
@@ -51,13 +51,13 @@ router.post('/getUserData', async (req,res) => {
     const {userName} = req.body;
     User.findOne({userName}).then((fetchedUser)=>{
         if(fetchedUser){
-            return res.status(200).json({data:fetchedUser,message:"Authorised SignIn"});
+            return res.status(200).json({data:fetchedUser,resCode:200});
         } else {
-            return res.status(200).json({data:'404',message:"No user found"});
+            return res.status(200).json({resCode:'404',message:"No user found"});
         }
     })
     .catch(err => {
-        return res.status(200).json({message:"SignUp Failed, Try again or If problem continues contact sakshatkar",status:400});
+        return res.status(200).json({message:"SignUp Failed, Try again or If problem continues contact sakshatkar",resCode:402});
     });
 
 });
