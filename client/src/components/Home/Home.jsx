@@ -29,10 +29,13 @@ const totalStyle = {
 
 const Home = () => {
 
+    const userName = "Harsh";
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [totalDays, setTotalDays] = useState(0);
     const [datesArray, setDatesArray] = useState([]);
+    const [counterValue, setCounterValue] = useState(0);
+      
 
     React.useEffect(() => {
 
@@ -56,7 +59,6 @@ const Home = () => {
             const resData = resp.data.count.dayCount;
             setData(resData);
             setTotal(0);
-            setCounterValue(resp.data.count.dayCount[Object.keys(resp.data.count.dayCount)[Object.keys(resp.data.count.dayCount).length-1]]);
             
             if(resp.resCode === 200) {
                 const startDate = new Date('11/17/2023');
@@ -74,6 +76,9 @@ const Home = () => {
                 setTotal(totalFrequency);
                 setDatesArray(dataArray);
                 setTotalDays(dataArray.length);
+                var todayDate = new Date();
+                const formattedDate = todayDate.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                setCounterValue(resData[formattedDate]);
             }
             else {
             }
@@ -110,24 +115,15 @@ const Home = () => {
         const resp = await res.json();
         console.log(resp);
         if(resp.resCode === '200') {
-            console.log(datesArray[formattedDate], formattedDate, newValue);
             datesArray[datesArray.length-1].frequency = newValue;
-            console.log(datesArray[datesArray.length-1].frequency, newValue);
             setDatesArray(datesArray);
             setCounterValue(newValue);
             setTotal(total+e);
         }
         else {
-            // setseverityMsg("error")
-            // setsnackBarMsg(resp.message);
-            // setOpen(true);
         }
     }
 
-    const userName = "Harsh";
-    const [counterValue, setCounterValue] = useState(data[Object.keys(data)[Object.keys(data).length-1]]);
-      
-    
     return (
         <Box>
 
