@@ -4,26 +4,18 @@ const express = require('express');
 const router = express.Router();
 
 router.post('/countAdjuster', async (req,res) => {
-    console.log("Working", req.body);
-
     const {userName,formattedDate,newValue} = req.body;
     const NewUser = new User({userName});
-    console.log("Working - 2", NewUser);
     User.findOne({userName}).then((fetchedUser)=>{
         if(fetchedUser){
-            console.log(formattedDate);
-            console.log(fetchedUser.count);
-            
             let count = {...fetchedUser.count};
             let dayCount = {...count.dayCount};
             dayCount[formattedDate] = newValue;
 
             count.dayCount = dayCount;
             fetchedUser.count = count;
-            console.log("msg");
             fetchedUser.save()
             .then(msg => {
-                console.log(msg);
             return res.status(200).json({resCode:'200',message:"Authorised SignIn"});
             })
             .catch(err => {
@@ -46,8 +38,6 @@ router.post('/countAdjuster', async (req,res) => {
 });
 
 router.post('/getUserData', async (req,res) => {
-    console.log("Working", req.body);
-
     const {userName} = req.body;
     User.findOne({userName}).then((fetchedUser)=>{
         if(fetchedUser){

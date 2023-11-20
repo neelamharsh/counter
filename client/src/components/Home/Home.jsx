@@ -2,6 +2,9 @@ import React from "react";
 import Box from '@mui/material/Box'
 import { Button } from "@mui/material";
 import { useState } from "react";
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import TableView from "../TableView";
 
 
 const main = {
@@ -12,6 +15,8 @@ const main = {
 }
 
 const dateBox = {
+    display:'flex',
+    justifyContent:'space-between',
     padding:'8px',
     borderBottom:'1px dotted black',
 }
@@ -20,7 +25,7 @@ const table = {
     paddingLeft:'20px',
     paddingRight:'20px',
     width:'98vw',
-    height:'89vh',
+    height:'90vh',
     background:'rgba(744, 740, 740, 0.4)',
     zIndex:1,
 }
@@ -148,7 +153,7 @@ const Home = () => {
                     
                     {
                         datesArray.map((d,i) => {
-                            return <Box style={dateBox} key={i}> {d.date} : {d.frequency} </Box>
+                            return <Box key={i}> <TableView d={d} key={i}/> </Box>
                         })
                     }
 
