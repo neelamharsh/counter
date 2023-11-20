@@ -2,46 +2,36 @@ import React from "react";
 import Box from '@mui/material/Box'
 import { Button } from "@mui/material";
 import { useState } from "react";
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
 import TableView from "../TableView";
 
 
 const main = {
     display:'flex',
     justifyContent:'space-between',
-    padding:'20px 20px 0px 20px',
+    padding:'20px 10px 0px 10px',
     background:'yellow',
 }
 
-const dateBox = {
-    display:'flex',
-    justifyContent:'space-between',
-    padding:'8px',
-    borderBottom:'1px dotted black',
-}
-
 const table = {
-    paddingLeft:'20px',
-    paddingRight:'20px',
-    width:'98vw',
-    height:'90vh',
+    paddingLeft:'10px',
+    width:'70%',
+    height:'92vh',
     background:'rgba(744, 740, 740, 0.4)',
-    zIndex:1,
 }
 
 const totalStyle = {
-    paddingLeft:'40px',
-    paddingRight:'20px',
+    paddingLeft:'20px',
     paddingTop:'20px',
-    width:'98vw',
-    background:'rgba(744, 740, 740, 0.4)',
+    width:'30%',
+    background:'black',//rgba(744, 740, 740, 0.4)
+    color:'white',
 };
 
 const Home = () => {
 
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
+    const [totalDays, setTotalDays] = useState(0);
     const [datesArray, setDatesArray] = useState([]);
 
     React.useEffect(() => {
@@ -83,6 +73,7 @@ const Home = () => {
                 }
                 setTotal(totalFrequency);
                 setDatesArray(dataArray);
+                setTotalDays(dataArray.length);
             }
             else {
             }
@@ -141,7 +132,7 @@ const Home = () => {
         <Box>
 
             <Box style={main}> 
-                <Box>Hii {userName}</Box>
+                <Box>Hii {userName},</Box>
                 <Box>
                     <Button variant="contained" onClick={() => countAdjuster(-1)}>-</Button> 
                     <span>  { counterValue } </span>
@@ -158,7 +149,10 @@ const Home = () => {
                     }
 
                 </Box>
-                <Box style={totalStyle}> Total : {total}</Box>
+                <Box style={totalStyle}> 
+                    <Box>{total} Times, </Box>
+                    <Box>In {totalDays} Days</Box>
+                </Box>
             </Box>
         </Box>
     )
