@@ -27,24 +27,49 @@ const totalStyle = {
     color:'white',
 };
 
+const dropDown = {
+    textAlign:'right',
+    paddingRight:'10px',
+    paddingBottom:"10px",
+    background:"yellow",
+    // zIndex:2,
+}
+
+const dropDownList = {
+    padding:'10px',
+    background:"yellow",
+    textAlign:'center',
+    width:"fix-content",
+    position:'absolute',
+    zIndex:2,
+    cursor:'pointer',
+    right:'33%',
+}
+
 const Home = () => {
 
-    const userName = "Harsh";
+    const [user, setUser] = useState(localStorage.getItem("UserName"));
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [totalDays, setTotalDays] = useState(0);
     const [datesArray, setDatesArray] = useState([]);
     const [counterValue, setCounterValue] = useState(0);
       
-
     React.useEffect(() => {
 
         const fetchData = async (e) => {
-        
             var api = "";
             if(process.env.NODE_ENV === 'development') api = 'http://localhost:8000/getUserData';
             else api = '/getUserData';
-            
+            var userName = "";
+            if(user == null) {
+                userName = prompt('Type here');
+                setUser(userName);
+                localStorage.setItem("UserName", userName)
+            } else {
+                userName = user;
+            }
+
             const res = await fetch(api, {
                 method:'POST',
                 headers:{
@@ -54,14 +79,13 @@ const Home = () => {
                     userName
                 })
             });
-    
             const resp = await res.json();
-            const resData = resp.data.count.dayCount;
-            setData(resData);
             setTotal(0);
             
             if(resp.resCode === 200) {
-                const startDate = new Date('11/17/2023');
+                const resData = resp.data.count.dayCount;
+                setData(resData);
+                const startDate = new Date('12/01/2023');
                 const presentDate = new Date();
                 const currentDate = new Date(startDate);
                 let totalFrequency = 0;
@@ -82,6 +106,7 @@ const Home = () => {
             }
             else {
             }
+            
         }
 
         fetchData();
@@ -108,7 +133,7 @@ const Home = () => {
                 'Content-Type':'application/json'
             },
             body:JSON.stringify({
-                userName,formattedDate,newValue
+                user,formattedDate,newValue
             })
         });
 
@@ -124,11 +149,12 @@ const Home = () => {
         }
     }
 
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
         <Box>
-
             <Box style={main}> 
-                <Box>Hii {userName},</Box>
+                <Box>Hii {user},</Box>
                 <Box>
                     <Button variant="contained" onClick={() => countAdjuster(-1)}>-</Button> 
                     <span>  { counterValue } </span>
@@ -136,7 +162,31 @@ const Home = () => {
                 </Box>
             </Box>
             <Box style={main}>
+
                 <Box style={table}>
+
+                    <Box style={dropDown}> 
+                    <button onClick={() => setIsOpen(!isOpen)}>January</button>
+                    </Box>
+                    {isOpen && (
+                        <Box style={dropDownList}>
+                        <p>January</p>
+                        <p>February</p>
+                        <p>March</p>
+                        <p>April</p> 
+                        
+                        <p>May</p>
+                        <p>June</p>
+                        <p>July</p>
+                        <p>August</p>
+                        <p>September</p>
+                        
+                        <p>October</p>
+                        <p>November</p>
+                        <p>December</p>
+
+                        </Box>
+                    )}
                     
                     {
                         datesArray.map((d,i) => {
