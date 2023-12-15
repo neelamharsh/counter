@@ -37,7 +37,7 @@ const TableView = ({d, key}) => {
         });
     }
 
-    const userName = "Harsh";
+    const userName = localStorage.getItem("UserName");
     const [content, setContent] = useState(d.frequency);
 
     const handleInput = (event) => {
