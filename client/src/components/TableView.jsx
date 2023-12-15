@@ -13,6 +13,7 @@ const dateBox = {
 
 const TableView = ({d, key}) => {
 
+    const userName = localStorage.getItem("UserName");
     const [isEditable, setIsEditable] = useState(false);
       
     const countAdjuster = async (e) => {
@@ -37,7 +38,7 @@ const TableView = ({d, key}) => {
         });
     }
 
-    const userName = localStorage.getItem("UserName");
+    
     const [content, setContent] = useState(d.frequency);
 
     const handleInput = (event) => {

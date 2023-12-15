@@ -4,9 +4,10 @@ const express = require('express');
 const router = express.Router();
 
 router.post('/countAdjuster', async (req,res) => {
-    const {user,formattedDate,newValue} = req.body;
-    const NewUser = new User({user});
-    User.findOne({user}).then((fetchedUser)=>{
+    const {userName,formattedDate,newValue} = req.body;
+    const NewUser = new User({userName});
+    console.log(userName);
+    User.findOne({userName}).then((fetchedUser)=>{
         if(fetchedUser){
             let count = {...fetchedUser.count};
             let dayCount = {...count.dayCount};
