@@ -1,49 +1,27 @@
 import React from "react";
 import Box from '@mui/material/Box'
-import { Button } from "@mui/material";
 import { useState } from "react";
-import TableView from "../TableView";
+import TableView from "../Utils/TableView";
+import Header from "../Header/Header";
+import Dropdown from "../Utils/Dropdown";
+import RightSidePanel from "../Utils/RightSidePanel";
 
+const mainTop = {
+    height:'100%',
+    background:'yellow',
+    minHeight:'100vh',
+}
 
 const main = {
     display:'flex',
     justifyContent:'space-between',
     padding:'20px 10px 0px 10px',
-    background:'yellow',
 }
 
 const table = {
     paddingLeft:'10px',
     width:'70%',
-    height:'92vh',
-    background:'rgba(744, 740, 740, 0.4)',
-}
-
-const totalStyle = {
-    paddingLeft:'20px',
-    paddingTop:'20px',
-    width:'30%',
-    background:'black',//rgba(744, 740, 740, 0.4)
-    color:'white',
-};
-
-const dropDown = {
-    textAlign:'right',
-    paddingRight:'10px',
-    paddingBottom:"10px",
-    background:"yellow",
-    // zIndex:2,
-}
-
-const dropDownList = {
-    padding:'10px',
-    background:"yellow",
-    textAlign:'center',
-    width:"fix-content",
-    position:'absolute',
-    zIndex:2,
-    cursor:'pointer',
-    right:'33%',
+    background:'rgba(744, 740, 740, 0.4)', 
 }
 
 const Home = () => {
@@ -90,7 +68,7 @@ const Home = () => {
                 const currentDate = new Date(startDate);
                 let totalFrequency = 0;
                 const dataArray = [];
-                while (currentDate <= presentDate) {
+                while (currentDate < presentDate) {
                     const formattedDate = currentDate.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
                     const frequencyMeasure = resData[formattedDate] === undefined ? 0 : resData[formattedDate];
                     dataArray.push({date:formattedDate, frequency:frequencyMeasure}); // Adjust the locale and format as needed
@@ -114,91 +92,24 @@ const Home = () => {
       }, []);
 
 
-      
-    const countAdjuster = async (e) => {
-        
-        let newValue = counterValue+e;
-
-        var api = "";
-        var currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        data[formattedDate] = newValue;
-
-        if(process.env.NODE_ENV === 'development') api = 'http://localhost:8000/countAdjuster';
-        else api = '/countAdjuster';
-        
-        const res = await fetch(api, {
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({
-                user,formattedDate,newValue
-            })
-        });
-
-        const resp = await res.json();
-        console.log(resp);
-        if(resp.resCode === '200') {
-            datesArray[datesArray.length-1].frequency = newValue;
-            setDatesArray(datesArray);
-            setCounterValue(newValue);
-            setTotal(total+e);
-        }
-        else {
-        }
-    }
-
-    const [isOpen, setIsOpen] = useState(false);
+      console.log(counterValue);
+    
 
     return (
-        <Box>
-            <Box style={main}> 
-                <Box>Hii {user},</Box>
-                <Box>
-                    <Button variant="contained" onClick={() => countAdjuster(-1)}>-</Button> 
-                    <span>  { counterValue } </span>
-                    <Button variant="contained" onClick={() => countAdjuster(1)}>+</Button> 
-                </Box>
-            </Box>
+        <Box style={mainTop}>
+
+            <Header userName={user} todayCount={counterValue}/>
+            
             <Box style={main}>
-
                 <Box style={table}>
-
-                    <Box style={dropDown}> 
-                    <button onClick={() => setIsOpen(!isOpen)}>January</button>
-                    </Box>
-                    {isOpen && (
-                        <Box style={dropDownList}>
-                        <p>January</p>
-                        <p>February</p>
-                        <p>March</p>
-                        <p>April</p> 
-                        
-                        <p>May</p>
-                        <p>June</p>
-                        <p>July</p>
-                        <p>August</p>
-                        <p>September</p>
-                        
-                        <p>October</p>
-                        <p>November</p>
-                        <p>December</p>
-
-                        </Box>
-                    )}
-                    
-                    {
-                        datesArray.map((d,i) => {
-                            return <Box key={i}> <TableView d={d} key={i}/> </Box>
-                        })
-                    }
-
+                <Dropdown />
+                {
+                    datesArray.map((d,i) => {
+                        return <Box key={i}> <TableView d={d} key={i}/> </Box>
+                    })
+                }
                 </Box>
-                <Box style={totalStyle}> 
-                    <Box>{total} Times, </Box>
-                    <Box>In {totalDays} Days</Box>
-                </Box>
+                <RightSidePanel total={total} totalDays={totalDays}/>
             </Box>
         </Box>
     )

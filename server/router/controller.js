@@ -17,7 +17,7 @@ router.post('/countAdjuster', async (req,res) => {
             fetchedUser.count = count;
             fetchedUser.save()
             .then(msg => {
-            return res.status(200).json({resCode:'200',message:"Authorised SignIn"});
+            return res.status(200).json({resCode:'200',message:"Successfully Added Counter"});
             })
             .catch(err => {
             return res.status(200).json({resCode:'401',message:err});
@@ -25,7 +25,7 @@ router.post('/countAdjuster', async (req,res) => {
         } else {
             NewUser.save()
             .then(item => {
-            return res.status(200).json({message:"SignUp Successfully",resCode:200});
+            return res.status(200).json({message:"New User Saved Successfullu",resCode:200});
             })
             .catch(err => {
             return res.status(200).json({message:err,resCode:402});
