@@ -63,7 +63,7 @@ const Home = () => {
             if(resp.resCode === 200) {
                 const resData = resp.data.count.dayCount;
                 setData(resData);
-                const startDate = new Date('12/01/2023');
+                const startDate = new Date('01/01/2024');
                 const presentDate = new Date();
                 const currentDate = new Date(startDate);
                 let totalFrequency = 0;
